@@ -1,0 +1,74 @@
+.carousel-image {
+  height: 500px;
+  object-fit: cover;
+  
+}
+
+.carousel-caption-custom {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  
+  padding: 15px 30px;
+  border-radius: 10px;
+  max-width: 80%;
+  text-align: center;
+}
+
+.carousel-caption-custom h2 {
+  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 0.3rem;
+}
+
+.carousel-caption-custom p {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.facility-img {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.facility-img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+.facility-text {
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #007bff;
+  transition: color 0.3s ease;
+}
+
+.facility-link:hover .facility-text {
+  color: #0056b3;
+}
+
+.facility-link {
+  text-decoration: none;
+}
+
+.footer-custom {
+  background-color: #f8f9fa;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+  border-top: 1px solid #ddd;
+}
+
+.footer-link {
+  color: #007bff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
