@@ -9,17 +9,25 @@ import os
 from models import db, User, Appointment, MedService, MedReport, Doctor, Contact
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://clinic_db_to4o_user:fEqNFW3ruzvLVe6bW1tjfKxLruHpmVnQ@dpg-d29gpiur433s739bpv50-a.oregon-postgres.render.com/clinic_db_to4o'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-
-CORS(app, origins=[
-    "http://localhost:3000",
-    "https://davisapp-frontend.onrender.com"  
-], supports_credentials=True)
+CORS(app,
+     origins=[
+         "http://localhost:3000",
+         "https://davisapp-frontend.onrender.com"
+     ],
+     supports_credentials=True,
+     allow_headers=["Content-Type", "Authorization"],
+     expose_headers=["Content-Type", "Authorization"]
+)
 
 db.init_app(app)
 migrate = Migrate(app, db)
+
+
 
 @app.route("/home", methods=["GET"])
 def home():
@@ -60,11 +68,18 @@ def signup():
 def login():
     data = request.get_json()
     user = User.query.filter_by(username=data["username"]).first()
+    
     if user and check_password_hash(user.password, data["password"]):
         return jsonify({
             "message": "Login successful",
-            "user": {"id": user.id, "username": user.username}
+            "user": {
+                "id": user.id,
+                "username": user.username,
+                "role": user.role 
+            },
+            "token": "dummy_token"
         }), 200
+
     return jsonify({"error": "Invalid credentials"}), 401
 
 @app.route("/appointments", methods=["GET"])
@@ -168,6 +183,7 @@ def about():
         "vision": "Clinic management system for appointments, services, and reports.",
         "why": "Simple and efficient way to manage clinic operations."
     }), 200
+
 @app.route('/init-db')
 def init_db():
     from flask_migrate import upgrade
