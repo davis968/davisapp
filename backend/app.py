@@ -4,14 +4,19 @@ from flask_migrate import Migrate
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+import os
 
 from models import db, User, Appointment, MedService, MedReport, Doctor, Contact
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///clinic.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-CORS(app, resources={r"/*": {"origins": "http://10.0.2.15:3000"}}, supports_credentials=True)
+
+CORS(app, origins=[
+    "http://localhost:3000",
+    "https://davisapp-frontend.onrender.com"  
+], supports_credentials=True)
 
 db.init_app(app)
 migrate = Migrate(app, db)
@@ -19,7 +24,6 @@ migrate = Migrate(app, db)
 @app.route("/home", methods=["GET"])
 def home():
     return jsonify({"message": "Welcome to the Clinic API"}), 200
-
 
 @app.route("/users", methods=["GET"])
 def get_users():
@@ -117,7 +121,6 @@ def delete_appointment(id):
     db.session.commit()
     return jsonify({"message": "Appointment deleted"}), 200
 
-
 @app.route("/services", methods=["GET"])
 def get_services():
     services = MedService.query.all()
@@ -127,7 +130,6 @@ def get_services():
         "description": s.description,
         "price": s.price
     } for s in services]), 200
-
 
 @app.route("/doctors", methods=["GET"])
 def get_doctors():
@@ -151,7 +153,6 @@ def get_patient_report(user_id):
         } for a in appointments]
     }), 200
 
-
 @app.route("/contact", methods=["GET"])
 def get_contact():
     contacts = Contact.query.all()
@@ -167,6 +168,13 @@ def about():
         "vision": "Clinic management system for appointments, services, and reports.",
         "why": "Simple and efficient way to manage clinic operations."
     }), 200
+@app.route('/init-db')
+def init_db():
+    from flask_migrate import upgrade
+    upgrade()
+    return "Database initialized and migrated!", 200
+
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
