@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import date
+from werkzeug.security import generate_password_hash, check_password_hash
 import json
 
 db = SQLAlchemy()
@@ -9,13 +10,19 @@ class User(db.Model):
     username = db.Column(db.String(30), nullable=False, unique=True)
     email = db.Column(db.String(120), nullable=False, unique=True)
     phone = db.Column(db.String(20))
-    password = db.Column(db.String(100), nullable=False)
+    password = db.Column(db.String(255), nullable=False)  # increased length for hash
+    role = db.Column(db.String(20), default='user') 
 
     appointments = db.relationship('Appointment', backref='user', lazy=True)
     medical_reports = db.relationship('MedReport', backref='patient', lazy=True)
 
-    
-    role = db.Column(db.String(20), default='user') 
+    def set_password(self, password):
+        """Hashes and sets the password."""
+        self.password = generate_password_hash(password)
+
+    def check_password(self, password):
+        """Checks the password against the stored hash."""
+        return check_password_hash(self.password, password)
 
     def to_dict(self):
         return {

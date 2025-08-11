@@ -1,12 +1,11 @@
 from flask import Flask, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import os
 
-from models import db, User, Appointment, MedService, MedReport, Doctor, Contact
+from models import db, User, Appointment, MedService, Doctor, Contact
 
 app = Flask(__name__)
 
@@ -152,8 +151,10 @@ def get_doctors():
     return jsonify([{
         "id": d.id,
         "name": d.name,
-        "speciality": d.speciality
+        "specialty": d.specialty,  
+        "photo_url": d.photo_url or "https://via.placeholder.com/300x200?text=Doctor"
     } for d in doctors]), 200
+
 
 @app.route("/reports/patient/<int:user_id>", methods=["GET"])
 def get_patient_report(user_id):

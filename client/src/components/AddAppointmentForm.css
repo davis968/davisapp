@@ -1,0 +1,74 @@
+.appointment-form {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.appointment-form h3 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
+  font-weight: 600;
+}
+
+.appointment-form label {
+  font-weight: 500;
+  margin-top: 10px;
+  color: #444;
+}
+
+.appointment-form input,
+.appointment-form select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  transition: border-color 0.3s;
+}
+
+.appointment-form input:focus,
+.appointment-form select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.appointment-form .btn-submit {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  transition: background-color 0.3s;
+}
+
+.appointment-form .btn-submit:hover {
+  background-color: #0056b3;
+}
+
+.appointment-form .btn-submit:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+.appointment-form .message {
+  text-align: center;
+  font-size: 0.95rem;
+  margin-bottom: 15px;
+}
+
+.message.success {
+  color: green;
+}
+
+.message.error {
+  color: red;
+}

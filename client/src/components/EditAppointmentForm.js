@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import api from '../api';
+import './EditAppointmentForm.css';
 
 function EditAppointmentForm({ appointment, onSuccess, onCancel }) {
   const [date, setDate] = useState(appointment.date);
@@ -10,44 +11,44 @@ function EditAppointmentForm({ appointment, onSuccess, onCancel }) {
     e.preventDefault();
     setLoading(true);
 
-    api.patch(`/appointments/${appointment.id}`, {
-      date,
-      description
-    })
+    api.patch(`/appointments/${appointment.id}`, { date, description })
       .then(() => {
         alert('Appointment updated successfully!');
-        onSuccess(); 
+        onSuccess();
       })
       .catch(() => alert('Failed to update appointment.'))
       .finally(() => setLoading(false));
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ marginTop: '10px' }}>
-      <div style={{ marginBottom: '10px' }}>
-        <label>Date: </label><br />
-        <input
-          type="date"
-          value={date}
-          onChange={e => setDate(e.target.value)}
-          required
-        />
-      </div>
+    <form onSubmit={handleSubmit} className="edit-appointment-form">
+      <label htmlFor="date">Date</label>
+      <input
+        id="date"
+        type="date"
+        value={date}
+        onChange={e => setDate(e.target.value)}
+        required
+      />
 
-      <div style={{ marginBottom: '10px' }}>
-        <label>Description: </label><br />
-        <textarea
-          value={description}
-          onChange={e => setDescription(e.target.value)}
-          rows="3"
-          required
-        />
-      </div>
+      <label htmlFor="description">Description</label>
+      <textarea
+        id="description"
+        value={description}
+        onChange={e => setDescription(e.target.value)}
+        rows="4"
+        required
+      />
 
       <button type="submit" disabled={loading}>
         {loading ? 'Saving...' : 'Save'}
       </button>
-      <button type="button" onClick={onCancel} style={{ marginLeft: '10px' }}>
+      <button
+        type="button"
+        onClick={onCancel}
+        className="cancel-btn"
+        disabled={loading}
+      >
         Cancel
       </button>
     </form>

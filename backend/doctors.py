@@ -1,4 +1,3 @@
-
 from app import app
 from models import db, Doctor
 
@@ -19,16 +18,22 @@ doctors_data = [
     {"name": "Dr. Nick Ruto", "specialty": "Endocrinologist"},
     {"name": "Dr. Olivia Naliaka", "specialty": "Pathologist"},
     {"name": "Dr. Peter Karanja", "specialty": "Pulmonologist"},
-    {"name": "Dr. Queen Atuma", "specialty": "Gastroenterologist"}
- 
-    
+    {"name": "Dr. Queen Atuma", "specialty": "Gastroenterologist"},
 ]
 
+placeholder_image = "https://via.placeholder.com/300x200?text=Doctor"
 
 with app.app_context():
+    added = 0
     for doc in doctors_data:
-        doctor = Doctor(name=doc["name"], specialty=doc["specialty"])
-        db.session.add(doctor)
-    
+        if not Doctor.query.filter_by(name=doc["name"]).first():
+            doctor = Doctor(
+                name=doc["name"],
+                specialty=doc["specialty"],
+                photo_url=placeholder_image
+            )
+            db.session.add(doctor)
+            added += 1
+
     db.session.commit()
-    print("doctors added successfully.")
+    print(f"{added} new doctors added successfully.")

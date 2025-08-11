@@ -3,79 +3,78 @@ import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'; 
 import './Facilities.css';
+import 'animate.css';
 
 function Home() {
   return (
     <div>
-      
+    
       <div className="container-fluid p-0">
         <div
           id="clinicCarousel"
-          className="carousel slide"
+          className="carousel slide carousel-fade"
           data-bs-ride="carousel"
-          data-bs-interval="3000"
+          data-bs-interval="4000"
         >
           <div className="carousel-inner">
-            <div className="carousel-item active">
-              <img
-                src="https://images.unsplash.com/photo-1666886573553-6548db92db79?q=80&w=870&auto=format&fit=crop"
-                alt="Modern hospital lobby"
-                className="d-block w-100"
-                style={{ height: '75vh', objectFit: 'cover' }}
-              />
-              <div className="carousel-caption d-flex justify-content-center align-items-center h-100">
-                <h2 className="text-white fw-bold ">Your Health, Our Priority</h2>
+            {[
+              {
+                image: 'https://images.unsplash.com/photo-1666886573553-6548db92db79?q=80&w=870&auto=format&fit=crop',
+                caption: 'Your Health, Our Priority',
+              },
+              {
+                image: 'https://plus.unsplash.com/premium_photo-1681966826227-d008a1cfe9c7?q=80&w=870&auto=format&fit=crop',
+                caption: 'Meet Our Experts',
+              },
+              {
+                image: 'https://plus.unsplash.com/premium_photo-1661766456250-bbde7dd079de?w=400&auto=format&fit=crop',
+                caption: 'Everything in One Place',
+              },
+            ].map((item, idx) => (
+              <div
+                className={`carousel-item ${idx === 0 ? 'active' : ''}`}
+                key={idx}
+              >
+                <div className="carousel-image-wrapper">
+                  <img
+                    src={item.image}
+                    className="d-block w-100"
+                    alt="Slide"
+                    style={{ height: '75vh', objectFit: 'cover' }}
+                  />
+                  <div className="overlay" />
+                  <div className="carousel-caption text-center">
+                    <h2 className="text-blue fw-bold display-2 animate__animated animate__fadeInDown">
+                      {item.caption}
+                    </h2>
+                  </div>
+                </div>
               </div>
-            </div>
-
-            <div className="carousel-item">
-              <img
-                src="https://plus.unsplash.com/premium_photo-1681966826227-d008a1cfe9c7?q=80&w=870&auto=format&fit=crop"
-                alt="Doctor consulting a patient"
-                className="d-block w-100"
-                style={{ height: '75vh', objectFit: 'cover' }}
-              />
-              <div className="carousel-caption d-flex justify-content-center align-items-center h-100">
-                <h2 className="text-white fw-bold ">Meet Our Experts</h2>
-              </div>
-            </div>
-
-            <div className="carousel-item">
-              <img
-                src="https://plus.unsplash.com/premium_photo-1661766456250-bbde7dd079de?w=400&auto=format&fit=crop"
-                alt="Pharmacy and medication services"
-                className="d-block w-100"
-                style={{ height: '75vh', objectFit: 'cover' }}
-              />
-              <div className="carousel-caption d-flex justify-content-center align-items-center h-100">
-                <h2 className="text-white fw-bold ">Everything in One Place</h2>
-              </div>
-            </div>
+            ))}
           </div>
 
-         
+          
           <button
-            className="carousel-control-prev"
+            className="carousel-control-prev d-none d-md-flex"
             type="button"
             data-bs-target="#clinicCarousel"
             data-bs-slide="prev"
           >
-            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span className="carousel-control-prev-icon"></span>
             <span className="visually-hidden">Previous</span>
           </button>
           <button
-            className="carousel-control-next"
+            className="carousel-control-next d-none d-md-flex"
             type="button"
             data-bs-target="#clinicCarousel"
             data-bs-slide="next"
           >
-            <span className="carousel-control-next-icon" aria-hidden="true"></span>
+            <span className="carousel-control-next-icon"></span>
             <span className="visually-hidden">Next</span>
           </button>
         </div>
       </div>
 
-      
       <div className="container my-5">
         <h3 className="text-center mb-4">Our Facilities</h3>
         <div className="row g-4">
@@ -114,7 +113,7 @@ function Home() {
         </div>
       </div>
 
-    
+      
       <footer className="footer-custom text-center py-4 bg-light">
         <p className="mb-1">&copy; {new Date().getFullYear()} HEALTH+ Clinic</p>
         <p>

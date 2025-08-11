@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import api from '../api';
+import './AddAppointmentForm.css';
 
 function AddAppointmentForm({ user }) {
   const location = useLocation();
@@ -12,16 +13,24 @@ function AddAppointmentForm({ user }) {
   const [impact, setImpact] = useState('');
   const [timeOfDay, setTimeOfDay] = useState('');
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState('');
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (new Date(date) < new Date().setHours(0, 0, 0, 0)) {
-      alert('Please select a valid future date.');
+      setError('Please select a valid future date.');
       return;
     }
 
     setLoading(true);
+    setError('');
+    setSuccess('');
 
     const description = `
 Service: ${prefillDescription || 'General Consultation'}
@@ -38,7 +47,7 @@ Preferred Time: ${timeOfDay}
       status: 'pending',
     })
       .then(() => {
-        alert('Appointment booked!');
+        setSuccess('Appointment booked successfully!');
         setDate('');
         setSymptoms('');
         setDuration('');
@@ -46,109 +55,65 @@ Preferred Time: ${timeOfDay}
         setTimeOfDay('');
       })
       .catch(() => {
-        alert('Error. Try again.');
+        setError('Something went wrong. Please try again.');
       })
       .finally(() => {
         setLoading(false);
       });
   };
 
-  const formStyle = {
-    maxWidth: '400px',
-    margin: '0 auto',
-    padding: '20px',
-    border: '1px solid #ccc',
-    borderRadius: '10px',
-    backgroundColor: '#f9f9f9',
-    fontFamily: 'Arial, sans-serif'
-  };
-
-  const labelStyle = {
-    display: 'block',
-    marginTop: '10px',
-    fontWeight: 'bold'
-  };
-
-  const inputStyle = {
-    width: '100%',
-    padding: '8px',
-    marginTop: '5px',
-    marginBottom: '10px',
-    borderRadius: '5px',
-    border: '1px solid #ccc'
-  };
-
-  const buttonStyle = {
-    width: '100%',
-    padding: '10px',
-    backgroundColor: '#007bff',
-    color: 'white',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer'
-  };
-
-  const buttonDisabledStyle = {
-    ...buttonStyle,
-    backgroundColor: '#aaa',
-    cursor: 'not-allowed'
-  };
-
   return (
-    <form onSubmit={handleSubmit} style={formStyle}>
-      <h3 style={{ textAlign: 'center' }}>Book Appointment</h3>
+    <form onSubmit={handleSubmit} className="appointment-form">
+      <h3>Book Appointment</h3>
 
       {prefillDescription && (
-        <p style={{ color: 'green', textAlign: 'center', marginBottom: '15px' }}>
+        <p className="message success">
           Booking for: <strong>{prefillDescription}</strong>
         </p>
       )}
+      {success && <p className="message success">{success}</p>}
+      {error && <p className="message error">{error}</p>}
 
-      <label style={labelStyle}>Date</label>
+      <label>Date</label>
       <input
         type="date"
         value={date}
         onChange={e => setDate(e.target.value)}
         required
-        style={inputStyle}
       />
 
-      <label style={labelStyle}>Symptoms</label>
+      <label>Symptoms</label>
       <input
         type="text"
         value={symptoms}
         onChange={e => setSymptoms(e.target.value)}
         required
         placeholder="e.g. headache, fever"
-        style={inputStyle}
       />
 
-      <label style={labelStyle}>Duration</label>
+      <label>Duration</label>
       <input
         type="text"
         value={duration}
         onChange={e => setDuration(e.target.value)}
         required
         placeholder="e.g. 3 days"
-        style={inputStyle}
       />
 
-      <label style={labelStyle}>Impact</label>
+      <label>Impact</label>
       <input
         type="text"
         value={impact}
         onChange={e => setImpact(e.target.value)}
         required
         placeholder="e.g. can't sleep, low energy"
-        style={inputStyle}
       />
 
-      <label style={labelStyle}>Preferred Time of Day</label>
+      <label>Preferred Time of Day</label>
       <select
         value={timeOfDay}
         onChange={e => setTimeOfDay(e.target.value)}
         required
-        style={inputStyle}
       >
         <option value="">Select...</option>
         <option>Morning</option>
@@ -158,7 +123,7 @@ Preferred Time: ${timeOfDay}
 
       <button
         type="submit"
-        style={loading ? buttonDisabledStyle : buttonStyle}
+        className="btn-submit"
         disabled={loading}
       >
         {loading ? 'Submitting...' : 'Submit'}

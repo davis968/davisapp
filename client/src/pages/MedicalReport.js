@@ -18,7 +18,7 @@ function MedicalReport({ user }) {
 
   const handleDownload = () => {
     const input = reportRef.current;
-    html2canvas(input).then(canvas => {
+    html2canvas(input, { scale: 2 }).then(canvas => {
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
       const imgProps = pdf.getImageProperties(imgData);
@@ -30,47 +30,84 @@ function MedicalReport({ user }) {
     });
   };
 
-  if (loading) return <p>Loading report...</p>;
-  if (!report) return <p>No report available.</p>;
+  if (loading) {
+    return (
+      <div className="text-center my-5">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <p className="mt-3">Loading report...</p>
+      </div>
+    );
+  }
+
+  if (!report) {
+    return (
+      <div className="alert alert-warning text-center my-4">
+        No report available.
+      </div>
+    );
+  }
 
   return (
-    <div>
-      {error && <p className="text-danger">{error}</p>}
+    <div className="container my-5">
+      {error && (
+        <div className="alert alert-danger text-center mb-4">{error}</div>
+      )}
 
-      <div ref={reportRef} className="p-4 border rounded shadow-sm bg-white">
-        <div className="mb-4">
-          <h4 className="mb-3">Patient Information</h4>
-          <p><strong>Name:</strong> {report.user.username}</p>
-          <p><strong>Email:</strong> {report.user.email}</p>
-          <p><strong>Phone:</strong> {report.user.phone}</p>
-        </div>
+      <div ref={reportRef} className="p-5 border rounded shadow bg-light">
+        <h2 className="text-center mb-4 text-primary">Medical Report</h2>
 
-        <div>
-          <h4 className="mb-3">Appointments</h4>
-          <table className="table table-bordered">
-            <thead className="table-light">
-              <tr>
-                <th>Date</th>
-                <th>Description</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {report.appointments.map((appt, index) => (
-                <tr key={index}>
-                  <td>{new Date(appt.date).toLocaleDateString()}</td>
-                  <td>{appt.description}</td>
-                  <td>{appt.status}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        
+        <section className="mb-5">
+          <h4 className="mb-3 border-bottom pb-2">Patient Information</h4>
+          <div className="row">
+            <div className="col-md-4"><strong>Name:</strong> {report.user.username}</div>
+            <div className="col-md-4"><strong>Email:</strong> {report.user.email}</div>
+            <div className="col-md-4"><strong>Phone:</strong> {report.user.phone}</div>
+          </div>
+        </section>
+
+       
+        <section>
+          <h4 className="mb-3 border-bottom pb-2">Appointments</h4>
+          {report.appointments.length > 0 ? (
+            <div className="table-responsive">
+              <table className="table table-hover table-bordered align-middle">
+                <thead className="table-primary">
+                  <tr>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {report.appointments.map((appt, index) => (
+                    <tr key={index}>
+                      <td>{new Date(appt.date).toLocaleDateString()}</td>
+                      <td>{appt.description}</td>
+                      <td>
+                        <span className={`badge ${appt.status === 'completed' ? 'bg-success' : 'bg-warning text-dark'}`}>
+                          {appt.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p className="text-muted">No appointments found.</p>
+          )}
+        </section>
       </div>
 
       <div className="text-center mt-4">
-        <button className="btn btn-primary" onClick={handleDownload}>
-          Download Report
+        <button className="btn btn-outline-primary me-2" onClick={handleDownload}>
+           Download PDF
+        </button>
+        <button className="btn btn-outline-secondary" onClick={() => window.print()}>
+           Print Report
         </button>
       </div>
     </div>
